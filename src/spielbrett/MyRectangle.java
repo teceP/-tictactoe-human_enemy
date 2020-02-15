@@ -7,22 +7,25 @@ import java.awt.*;
 
 public class MyRectangle extends Rectangle {
 
+    /**
+     * Property eines Feldes, welches den Index des Feldes repräsentiert
+     */
     private StringProperty zeileUndSpalte = new SimpleStringProperty("");
-    private SpielerEnum spieler;
-    private int zeile;
-    private int spalte;
-
-    public void setZeile(){
-        this.zeile = this.wandleCharZuInt(this.getZeileUndSpalte().charAt(0));
-    }
-
-    public void setSpalte(){
-        this.spalte = this.wandleCharZuInt(this.getZeileUndSpalte().charAt(1));
-    }
 
     /**
+     * Spielerzeichen (X oder O)
+     */
+    private SpielerEnum spieler;
+
+
+    public MyRectangle(SpielerEnum spieler){
+        this.spieler = spieler;
+    }
+    /**
      * Wandelt einen Character in den entspechenden Int-Wert um
-     * @param character
+     *
+     * @param character die Zeile als Buchstabe
+     * @return int die Zeile als Int-wert
      * @return -1, falls Character keinem der vorgesehenen entspricht
      */
     public static int wandleCharZuInt(char character){
@@ -38,24 +41,24 @@ public class MyRectangle extends Rectangle {
         }
     }
 
-
-
-    public final String getZeileUndSpalte(){
-        return this.zeileUndSpalte.get();
-    }
-
-    public final void setZeileUndSpalte(String zeileUndSpalte){
-        this.zeileUndSpalte.set(zeileUndSpalte);
-    }
-
+    /**
+     * Gibt Stringproperty zurueck
+     */
     public StringProperty getZeileUndSpalteProperty(){
         return this.zeileUndSpalte;
     }
 
+    /**
+     * Gibt das Spielerenum zurueck
+     */
     public SpielerEnum getSpieler() {
         return spieler;
     }
 
+    /**
+     * Setzt das Spielerenum
+     * @param spieler
+     */
     public void setSpieler(SpielerEnum spieler) {
         this.spieler = spieler;
     }

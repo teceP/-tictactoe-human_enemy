@@ -10,7 +10,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import spieler.SpielerEnum;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,25 +18,44 @@ import java.util.ResourceBundle;
 
 public class SpielbrettController implements Initializable {
 
+    /**
+     * Wie viele Spielzuege wurden gemacht
+     */
     private int spielzuege;
 
-    private SpielerEnum spieler;
-
+    /**
+     * Das Spielbrett
+     */
     @FXML
     private Spielbrett spielbrett;
 
+    /**
+     * Die Infoanzeige auf der JavaFX Oberflaeche
+     */
     @FXML
     private Text txtInfo;
 
+    /**
+     * Der Startbutton auf der JavaFX Oberfläche
+     */
     @FXML
     private Button btnStarten;
 
+    /**
+     * Der Nochmalbutton auf der JavaFX Oberfläche
+     */
     @FXML
     private Button btnRefresh;
 
+    /**
+     * Gridfeld, auf dem alle Rectangles sind
+     */
     @FXML
     private GridPane gridFelder;
 
+    /**
+     * Alle Rectangles (Kacheln/Felder, auf die die Spieler druecken kännen)
+     */
     @FXML
     Rectangle rectAA;
     @FXML
@@ -57,8 +75,17 @@ public class SpielbrettController implements Initializable {
     @FXML
     Rectangle rectCC;
 
+    /**
+     * Liste aller Rectangles
+     */
     private List<Rectangle> rectangleList;
 
+    /**
+     * Initialisierung der Anfangswerte
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.rectanglesZurListe();
@@ -79,6 +106,9 @@ public class SpielbrettController implements Initializable {
         this.setRectangleEvents();
     }
 
+    /**
+     * Fuegt alle Rectangles zur Liste hinzu
+     */
     private void rectanglesZurListe() {
         this.rectangleList = new ArrayList<>();
         this.rectangleList.add(rectAA);
@@ -92,15 +122,16 @@ public class SpielbrettController implements Initializable {
         this.rectangleList.add(rectCC);
     }
 
+    /**
+     * Setzt alle Bindings zwischen:
+     *
+     *  Info-Textproperty vom SpielbrettModel <-> Info-Textfeld auf JavaFX Oberfläche
+     *  (Alle) Rectangles vom SpielbrettModel <-> (Alle) Rectangle auf JavaFX Oberfläche
+     */
     private void setBindings() {
-        /**
-         * Immer die aktuellste Nachricht anzeigen lassen
-         */
+
         this.txtInfo.textProperty().bind(this.spielbrett.aktuelleNachrichtProperty());
 
-        /**
-         * Alle Felder vom Model, mit dem der View verbinden.
-         */
         this.spielbrett.getFeld(0, 0).getZeileUndSpalteProperty().bind(this.rectAA.idProperty());
         this.spielbrett.getFeld(0, 1).getZeileUndSpalteProperty().bind(this.rectAB.idProperty());
         this.spielbrett.getFeld(0, 2).getZeileUndSpalteProperty().bind(this.rectAC.idProperty());
@@ -121,16 +152,16 @@ public class SpielbrettController implements Initializable {
         for (int c = 0; c < this.spielbrett.getFelder().length; c++) {
 
             //Zeile
-            if (spielbrett.getFeld(c, 0).getSpieler() == this.spielbrett.getAmZug()
-                    && spielbrett.getFeld(c, 1).getSpieler() == this.spielbrett.getAmZug()
-                    && spielbrett.getFeld(c, 2).getSpieler() == this.spielbrett.getAmZug()) {
+            if (spielbrett.getFeld(c, 0).getSpieler().equals(this.spielbrett.getAmZug())
+                    && spielbrett.getFeld(c, 1).getSpieler().equals(this.spielbrett.getAmZug())
+                    && spielbrett.getFeld(c, 2).getSpieler().equals(this.spielbrett.getAmZug())) {
                 return true;
             }
 
             //Spalte
-            if (spielbrett.getFeld(0, c).getSpieler() == this.spielbrett.getAmZug()
-                    && spielbrett.getFeld(1, c).getSpieler() == this.spielbrett.getAmZug()
-                    && spielbrett.getFeld(2, c).getSpieler() == this.spielbrett.getAmZug()) {
+            if (spielbrett.getFeld(0, c).getSpieler().equals(this.spielbrett.getAmZug())
+                    && spielbrett.getFeld(1, c).getSpieler().equals(this.spielbrett.getAmZug())
+                    && spielbrett.getFeld(2, c).getSpieler().equals(this.spielbrett.getAmZug())) {
                 return true;
             }
         }
@@ -156,6 +187,9 @@ public class SpielbrettController implements Initializable {
         return false;
     }
 
+    /**
+     * Ruft fuer jedes Rectangleobject die setOnMouseClicked-Methode auf, welche die rectangleClickEvent-Methode aufruft.
+     */
     private void setRectangleEvents() {
 
         this.rectAA.setOnMouseClicked(mouseEvent -> {
@@ -195,6 +229,10 @@ public class SpielbrettController implements Initializable {
         });
     }
 
+    /**
+     * Legt fest, was bei einem Mausklick auf ein Rectangle passiert.
+     * @param rectangle das Rectangleobjekt
+     */
     private void rectangleClickEvent(Rectangle rectangle) {
         ImagePattern imagePattern;
 
@@ -223,6 +261,8 @@ public class SpielbrettController implements Initializable {
             if (this.pruefeGewinner()) {
                 this.spielbrett.setAktuelleNachricht("Gewonnen hat " + this.spielbrett.getAmZug() + ". Glueckwunsch!");
                 this.spielVorbei();
+            }else{
+
             }
         }
 
@@ -234,7 +274,31 @@ public class SpielbrettController implements Initializable {
         this.spielbrett.setAmZug(this.spielbrett.getAmZug().getNaechsterSpieler());
     }
 
+    /**
+     * Gibt das Spielbrett zurueck
+     */
+    public Spielbrett getSpielbrett(){
+        return this.spielbrett;
+    }
 
+    /**
+     * Setzt das Spielbrett ein
+     */
+    public void setSpielbrett(Spielbrett spielbrett){
+        this.spielbrett = spielbrett;
+    }
+
+    /**
+     * Setzt die Anzahl der Zuege
+     * @param zuege
+     */
+    public void setSpielzuege(int zuege){
+        this.spielzuege = zuege;
+    }
+
+    /**
+     * Waehlt einen zufällig gewaehlten Spieler als Anfaenger aus
+     */
     public void anfaengerWaehlen() {
         Random rand = new Random();
         int n = rand.nextInt(2);
@@ -250,11 +314,18 @@ public class SpielbrettController implements Initializable {
      * Buttons
      */
 
+    /**
+     * Refreshbutton/Nochmalbutton
+     * mehr in refresh()-Methode
+     */
     @FXML
     private void spielVorbei() {
         this.btnRefresh.setVisible(true);
     }
 
+    /**
+     * FXML Methode - Aufruf bei Klick auf "Nochmal"-Button
+     */
     @FXML
     private void refresh() {
         for (Rectangle r : this.rectangleList) {
@@ -268,6 +339,10 @@ public class SpielbrettController implements Initializable {
         this.spielbrett.setAktuelleNachricht("Druecke auf Spiel starten.");
     }
 
+    /**
+     * Startet das Spiel.
+     * Setzt einige Standartwerte (zurueck, falls vorher bereits ein Spiel gespielt wurde)
+     */
     @FXML
     private void starteSpiel() {
 
